@@ -1,10 +1,9 @@
-import { format } from 'path';
-import UserModels from '../models/UserModels.js';
+import User from '../models/User.js';
 
-export const getuser = async (req, res) => {
+export const getUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await UserModels.findBy(id);
+    const user = await User.findBy(id);
     res.status(200).json(user);
   } catch (e) {
     res.status(404).json({ message: e.message });
@@ -14,9 +13,9 @@ export const getuser = async (req, res) => {
 export const getUserFriends = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await UserModels.findById(id);
+    const user = await User.findById(id);
     const friends = await Promise.all(
-      user.friends.map((id) => UserModels.findById(id))
+      user.friends.map((id) => User.findById(id))
     );
     const formattedFriends = friends.map(
       ({ _id, firstName, lastName, occupation, location, picturePath }) => {
@@ -39,8 +38,8 @@ export const getUserFriends = async (req, res) => {
 export const addRemoveFriend = async (req, res) => {
   try {
     const { id, friendId } = req.params;
-    const user = await UserModels.findById(id);
-    const friend = await UserModels.findById(friendId);
+    const user = await User.findById(id);
+    const friend = await User.findById(friendId);
 
     if (user.friends.includes(friendId)) {
       user.friends = user.friends.filter((id) => id !== friendId);
@@ -53,7 +52,7 @@ export const addRemoveFriend = async (req, res) => {
     await friend.save();
 
     const friends = await Promise.all(
-      user.friends.map((id) => UserModels.findById(id))
+      user.friends.map((id) => User.findById(id))
     );
     const formattedFriends = friends.map(
       ({ _id, firstName, lastName, occupation, location, picturePath }) => {

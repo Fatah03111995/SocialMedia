@@ -2,13 +2,13 @@ import mongoose from 'mongoose';
 
 const UserSchema = new mongoose.Schema(
   {
-    firstname: {
+    firstName: {
       type: String,
       required: true,
       min: 2,
       max: 50,
     },
-    lastname: {
+    lastName: {
       type: String,
       required: true,
       min: 2,
@@ -27,7 +27,6 @@ const UserSchema = new mongoose.Schema(
     },
     picturePath: {
       type: String,
-      required: true,
       default: '',
     },
     friends: {
@@ -42,4 +41,5 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const User = mongoose.model('User', UserSchema);
+const User = mongoose.model('User', UserSchema);
+export default User;
