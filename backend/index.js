@@ -14,9 +14,9 @@ import postRoutes from './routes/posts.js';
 import { register } from './controllers/auth.js';
 import { createPost } from './controllers/posts.js';
 import { verifyToken } from './middleware/auth.js';
-// import User from './models/User.js';
-// import Post from './models/Post.js';
-// import { users, posts } from './data/index.js';
+import User from './models/User.js';
+import Post from './models/Post.js';
+import { users, posts } from './data/index.js';
 
 // configuration
 const __filename = fileURLToPath(import.meta.url);
@@ -65,8 +65,8 @@ mongoose
     app.listen(PORT, async () => {
       console.log(`Mongoose connected from server PORT: ${PORT}`);
       //add data
-      // await User.insertMany(users);
-      // await Post.insertMany(posts);
+      await User.insertMany(users);
+      await Post.insertMany(posts);
     });
   })
   .catch((e) => console.log(`${e} did not connect`));
