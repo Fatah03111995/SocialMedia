@@ -1,5 +1,3 @@
-import { color } from '@mui/system';
-
 // color design tokens export
 export const colorTokens = {
   grey: {
@@ -76,7 +74,7 @@ export const themeSettings = (mode) => {
             },
           }),
     },
-    typhography: {
+    typography: {
       fontFamily: ['Rubik', 'sans-serif'].join(','),
       fontSize: 12,
       h1: {
