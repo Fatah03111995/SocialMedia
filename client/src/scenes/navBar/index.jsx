@@ -50,7 +50,7 @@ const NavBar = () => {
           fontSize="clamp(1rem, 2rem, 2.25rem)"
           color={primary}
           onClick={() => {
-            console.log(theme);
+            navigate('/');
           }}
           sx={{
             '&:hover': {
@@ -77,7 +77,7 @@ const NavBar = () => {
       </FlexBetween>
 
       {/* Desktop Nav */}
-      {nonMobile ? (
+      {nonMobile && (
         <FlexBetween gap="2rem">
           <IconButton onClick={() => dispatch(setMode())}>
             {mode === 'dark' ? (
@@ -114,7 +114,9 @@ const NavBar = () => {
             </Select>
           </FormControl>
         </FlexBetween>
-      ) : (
+      )}
+
+      {!nonMobile && !toggle && (
         <IconButton onClick={() => setToggle(!toggle)}>
           <Menu />
         </IconButton>
@@ -128,8 +130,8 @@ const NavBar = () => {
           bottom="0"
           height="100%"
           zIndex="10"
-          maxWidth="500px"
-          minWidth="300px"
+          maxWidth="300px"
+          minWidth="100px"
           backgroundColor={bg}
         >
           {/* Close Icon */}
@@ -140,13 +142,7 @@ const NavBar = () => {
           </Box>
 
           {/* Menu Item*/}
-          <FlexBetween
-            display="flex"
-            flexDirection="column"
-            justifiyContent="center"
-            alignItems="center"
-            gap="3rem"
-          >
+          <FlexBetween display="flex" flexDirection="column" gap="3rem">
             <IconButton
               onClick={() => dispatch(setMode())}
               sx={{ fontSize: '25px' }}
@@ -154,7 +150,7 @@ const NavBar = () => {
               {mode === 'dark' ? (
                 <DarkMode sx={{ fontSize: '25px' }} />
               ) : (
-                <LightMode sx={{ fontSize: '25px' }} />
+                <LightMode sx={{ color: dark, fontSize: '25px' }} />
               )}
             </IconButton>
             <Message sx={{ fontSize: '25px' }} />
