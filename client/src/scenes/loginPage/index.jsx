@@ -1,32 +1,39 @@
-import { useState } from 'react';
-import {
-  Box,
-  Button,
-  TextField,
-  useMediaQuery,
-  Typography,
-  useTheme,
-} from '@mui/material';
-import editOutlinedIcon from '@mui/icons-material/EditOutlined';
-import { Formik } from 'formik';
-import * as yup from 'yup';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { setLogin } from 'state';
-import Dropzone from 'react-dropzone';
-import FlexBetween from 'components/FlexBetween';
-
-const registerSchema = yup.object().shape({
-  firstName: yup.string().required('diperlukan'),
-  lastName: yup.string().required('diperlukan'),
-  email: yup.string().email('Coba ketik denagn benar').required('diperlukan'),
-  password: yup.string().required('diperlukan'),
-  location: yup.string().required('diperlukan'),
-  occupation: yup.string().required('diperlukan'),
-  picture: yup.string().required('diperlukan'),
-});
+import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
+import Form from './Form';
 const LoginPage = () => {
-  return <div>LoginPage</div>;
+  const theme = useTheme();
+  const nonMobileScreen = useMediaQuery('(min-width: 600px)');
+  return (
+    <Box>
+      <Box
+        width="100%"
+        backgroundColor={theme.palette.background.alt}
+        alignItems="center"
+        p="1rem 6%"
+      >
+        <Typography
+          fontWeight="bold"
+          fontSize="32px"
+          color="primary"
+          textAlign="center"
+        >
+          SocioPedia
+        </Typography>
+      </Box>
+      <Box
+        width={nonMobileScreen ? '50%' : '93%'}
+        p="2rem"
+        margin="2rem auto"
+        borderRadius="1.5rem"
+        backgroundColor={theme.palette.background.alt}
+      >
+        <Typography fontWeight="500" variant="h5" mb="1.5rem">
+          Welcome to Sociopedia, Social Media for Sociopath
+        </Typography>
+        {/* <Form /> */}
+      </Box>
+    </Box>
+  );
 };
 
 export default LoginPage;

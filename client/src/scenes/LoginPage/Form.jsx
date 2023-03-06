@@ -45,7 +45,7 @@ const initialValuesLogin = {
 };
 
 const Form = () => {
-  const [pageType, setPageType] = useState('login');
+  const [pageType, setPageType] = useState('register');
   const { palette } = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -154,7 +154,26 @@ const Form = () => {
                   border={`1px solid $palette.neutral.medium`}
                   borderRadius="5px"
                 >
-                  <Dropzone></Dropzone>
+                  <Dropzone
+                    acceptedFiles=".jpg,.jpeg,.png"
+                    multiple="false"
+                    onDrop={(acceptedFiles) => {
+                      setFieldValue('picture', acceptedFiles[0]);
+                    }}
+                  >
+                    {({ getRootProps, getInputProps }) => (
+                      <Box
+                        {...getRootProps()}
+                        border={`2px dashed ${palette.primary.main}`}
+                        p="1rem"
+                        sx={{
+                          '&:hover': {
+                            cursor: 'pointer',
+                          },
+                        }}
+                      ></Box>
+                    )}
+                  </Dropzone>
                 </Box>
               </>
             )}
