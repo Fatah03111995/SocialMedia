@@ -1,5 +1,6 @@
 import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
-import Form from './Form';
+import Form from './Form.jsx';
+
 const LoginPage = () => {
   const theme = useTheme();
   const nonMobileScreen = useMediaQuery('(min-width: 600px)');
@@ -27,10 +28,10 @@ const LoginPage = () => {
         borderRadius="1.5rem"
         backgroundColor={theme.palette.background.alt}
       >
-        <Typography fontWeight="500" variant="h5" mb="1.5rem">
+        <Typography fontWeight="bold" fontSize="0.9rem" mb="1.5rem">
           Welcome to Sociopedia, Social Media for Sociopath
         </Typography>
-        {/* <Form /> */}
+        <Form />
       </Box>
     </Box>
   );

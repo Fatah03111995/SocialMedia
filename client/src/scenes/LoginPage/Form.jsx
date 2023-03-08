@@ -72,7 +72,7 @@ const Form = () => {
         setFieldValue,
         resetForm,
       }) => (
-        <Form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <Box
             display="grid"
             gap="30px"
@@ -112,18 +112,6 @@ const Form = () => {
                   }}
                 />
                 <TextField
-                  label="e-Mail"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.email}
-                  helperText={touched.email && errors.email}
-                  error={Boolean(touched.email) && Boolean(errors.email)}
-                  name="email"
-                  sx={{
-                    gridColumn: 'span 4',
-                  }}
-                />
-                <TextField
                   label="Occupation"
                   onBlur={handleBlur}
                   onChange={handleChange}
@@ -151,7 +139,7 @@ const Form = () => {
                 />
                 <Box
                   gridColumn="span 4"
-                  border={`1px solid $palette.neutral.medium`}
+                  border={`1px solid ${palette.neutral.medium}`}
                   borderRadius="5px"
                 >
                   <Dropzone
@@ -171,14 +159,69 @@ const Form = () => {
                             cursor: 'pointer',
                           },
                         }}
-                      ></Box>
+                      >
+                        <input {...getInputProps()} />
+                        {!values.picture ? (
+                          <p>Add Picture Here</p>
+                        ) : (
+                          <FlexBetween>
+                            <Typography>
+                              {values.picture.name}
+                              <editOutlinedIcon />
+                            </Typography>
+                          </FlexBetween>
+                        )}
+                      </Box>
                     )}
                   </Dropzone>
                 </Box>
               </>
             )}
+            <TextField
+              label="e-Mail"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              value={values.email}
+              helperText={touched.email && errors.email}
+              error={Boolean(touched.email) && Boolean(errors.email)}
+              name="email"
+              sx={{
+                gridColumn: 'span 4',
+              }}
+            />
+            <TextField
+              label="Password"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              value={values.password}
+              helperText={touched.password && errors.password}
+              error={Boolean(touched.password) && Boolean(errors.password)}
+              name="password"
+              sx={{
+                gridColumn: 'span 4',
+              }}
+            />
           </Box>
-        </Form>
+          {/* Button */}
+          <Box>
+            <Button
+              fullwidth
+              type="submit"
+              sx={{
+                p: '1rem',
+                m: '2rem 0',
+                borderRadius: '5px',
+                backgroundColor: palette.background.alt,
+                color: palette.primary.main,
+                '&:hover': {
+                  color: palette.primary.main,
+                },
+              }}
+            >
+              <Typography>{isLogin ? 'LOGIN' : 'REGISTER'}</Typography>
+            </Button>
+          </Box>
+        </form>
       )}
     </Formik>
   );
