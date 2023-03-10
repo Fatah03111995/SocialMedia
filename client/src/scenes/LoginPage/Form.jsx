@@ -6,8 +6,11 @@ import {
   useMediaQuery,
   Typography,
   useTheme,
+  IconButton,
+  FormControl,
 } from '@mui/material';
-import editOutlinedIcon from '@mui/icons-material/EditOutlined';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import { useNavigate } from 'react-router-dom';
@@ -45,6 +48,7 @@ const initialValuesLogin = {
 };
 
 const Form = () => {
+  const [visibility, setVisibility] = useState(true);
   const [pageType, setPageType] = useState('register');
   const { palette } = useTheme();
   const dispatch = useDispatch();
@@ -75,7 +79,7 @@ const Form = () => {
         <form onSubmit={handleSubmit}>
           <Box
             display="grid"
-            gap="30px"
+            gap="20px"
             gridTemplateColumns="repeat(4, minmax(0, 1fr))"
             sx={{
               '& > div': {
@@ -139,6 +143,8 @@ const Form = () => {
                 />
                 <Box
                   gridColumn="span 4"
+                  p="0.5rem"
+                  m="1rem 0"
                   border={`1px solid ${palette.neutral.medium}`}
                   borderRadius="5px"
                 >
@@ -153,7 +159,7 @@ const Form = () => {
                       <Box
                         {...getRootProps()}
                         border={`2px dashed ${palette.primary.main}`}
-                        p="1rem"
+                        p="0.7rem"
                         sx={{
                           '&:hover': {
                             cursor: 'pointer',
@@ -165,10 +171,8 @@ const Form = () => {
                           <p>Add Picture Here</p>
                         ) : (
                           <FlexBetween>
-                            <Typography>
-                              {values.picture.name}
-                              <editOutlinedIcon />
-                            </Typography>
+                            <Typography>{values.picture.name}</Typography>
+                            <EditOutlinedIcon />
                           </FlexBetween>
                         )}
                       </Box>
@@ -178,7 +182,7 @@ const Form = () => {
               </>
             )}
             <TextField
-              label="e-Mail"
+              label="E-Mail"
               onBlur={handleBlur}
               onChange={handleChange}
               value={values.email}
@@ -189,27 +193,52 @@ const Form = () => {
                 gridColumn: 'span 4',
               }}
             />
-            <TextField
-              label="Password"
-              onBlur={handleBlur}
-              onChange={handleChange}
-              value={values.password}
-              helperText={touched.password && errors.password}
-              error={Boolean(touched.password) && Boolean(errors.password)}
-              name="password"
+            <FormControl
               sx={{
                 gridColumn: 'span 4',
               }}
-            />
+            >
+              <TextField
+                label="Password"
+                type={visibility ? 'password' : 'text'}
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.password}
+                helperText={touched.password && errors.password}
+                error={Boolean(touched.password) && Boolean(errors.password)}
+                name="password"
+              />
+
+              <IconButton
+                onClick={() => {
+                  setVisibility(!visibility);
+                }}
+              >
+                {visibility ? (
+                  <VisibilityOff
+                    sx={{
+                      fontSize: '1rem',
+                    }}
+                  />
+                ) : (
+                  <Visibility
+                    sx={{
+                      fontSize: '1rem',
+                    }}
+                  />
+                )}
+              </IconButton>
+            </FormControl>
           </Box>
           {/* Button */}
-          <Box>
+          <Box gridColumn="span 4">
             <Button
-              fullwidth
+              width="100%"
               type="submit"
               sx={{
-                p: '1rem',
-                m: '2rem 0',
+                p: '0.8rem',
+                m: '1rem 0',
+                gridColumn: 'span 4',
                 borderRadius: '5px',
                 backgroundColor: palette.background.alt,
                 color: palette.primary.main,
@@ -218,9 +247,28 @@ const Form = () => {
                 },
               }}
             >
-              <Typography>{isLogin ? 'LOGIN' : 'REGISTER'}</Typography>
+              {isLogin ? 'LOGIN' : 'REGISTER'}
             </Button>
           </Box>
+
+          <Typography
+            onClick={() => {
+              setPageType(isLogin ? 'register' : 'login');
+              resetForm();
+            }}
+            sx={{
+              cursor: 'pointer',
+              color: palette.primary.main,
+              '&:hover': {
+                color: palette.primary.light,
+              },
+              textDecoration: 'underlined',
+            }}
+          >
+            {isLogin
+              ? `Don't Have Account ? Sign Up Here..`
+              : `Have an Account ? Just Login Here..`}
+          </Typography>
         </form>
       )}
     </Formik>
