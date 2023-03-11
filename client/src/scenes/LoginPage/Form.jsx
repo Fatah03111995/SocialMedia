@@ -57,7 +57,38 @@ const Form = () => {
   const isLogin = pageType === 'login';
   const isRegister = pageType === 'register';
 
-  const handleFormSubmit = async (values, onSubmitProps) => {};
+  const register = async (values, onSubmitProps) => {
+    // mengelola file gambar
+    const formData = new FormData();
+    for (let value in values) {
+      formData.append(value, value[value]);
+    }
+    formData.append('picturePath', values.picture.name);
+    console.log('ini isi values');
+    console.log(values);
+    console.log('ini isi formData');
+    console.log(formData);
+    const savedUserResponse = await fetch(
+      'http://localhost:5000/auth/register',
+      {
+        method: 'POST',
+        body: formData,
+      }
+    );
+    const savedUser = await savedUserResponse.json();
+    console.log('saved user');
+    console.log(savedUser);
+    if (savedUser) {
+      setPageType('login');
+      onSubmitProps.resetForm();
+    }
+  };
+
+  const login = async (values, onSubmitProps) => {};
+  const handleFormSubmit = async (values, onSubmitProps) => {
+    if (isLogin) await login(values, onSubmitProps);
+    if (isRegister) await register(values, onSubmitProps);
+  };
   return (
     <Formik
       onSubmit={handleFormSubmit}
@@ -150,7 +181,7 @@ const Form = () => {
                 >
                   <Dropzone
                     acceptedFiles=".jpg,.jpeg,.png"
-                    multiple="false"
+                    multiple={false}
                     onDrop={(acceptedFiles) => {
                       setFieldValue('picture', acceptedFiles[0]);
                     }}

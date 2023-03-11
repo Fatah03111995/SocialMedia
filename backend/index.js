@@ -55,7 +55,7 @@ app.use('/posts', postRoutes);
 
 // mongo setup
 mongoose.set('strictQuery', false);
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 mongoose
   .connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
@@ -64,9 +64,6 @@ mongoose
   .then(() => {
     app.listen(PORT, async () => {
       console.log(`Mongoose connected from server PORT: ${PORT}`);
-      //add data
-      await User.insertMany(users);
-      await Post.insertMany(posts);
     });
   })
   .catch((e) => console.log(`${e} did not connect`));
