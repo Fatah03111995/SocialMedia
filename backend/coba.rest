@@ -1,0 +1,12 @@
+POST http://localhost:5000/auth/register HTTP/1.1
+Content-Type: application/json
+
+{
+    "firstName": "fth",
+    "lastName": "abd",
+    "email": "abddldl@gmail.com",
+    "password":"asd",
+    "picturePath":"asd.jpg",
+    "location":"jakarta",
+    "occupation":"analis"
+}

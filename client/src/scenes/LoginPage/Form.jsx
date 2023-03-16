@@ -8,6 +8,7 @@ import {
   useTheme,
   IconButton,
   FormControl,
+  InputAdornment,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
@@ -41,6 +42,7 @@ const initialValuesRegister = {
   email: '',
   location: '',
   occupation: '',
+  password: '',
 };
 const initialValuesLogin = {
   email: '',
@@ -59,15 +61,12 @@ const Form = () => {
 
   const register = async (values, onSubmitProps) => {
     // mengelola file gambar
+    console.log(values);
     const formData = new FormData();
     for (let value in values) {
-      formData.append(value, value[value]);
+      formData.append(value, values[value]);
     }
     formData.append('picturePath', values.picture.name);
-    console.log('ini isi values');
-    console.log(values);
-    console.log('ini isi formData');
-    console.log(formData);
     const savedUserResponse = await fetch(
       'http://localhost:5000/auth/register',
       {
@@ -76,11 +75,9 @@ const Form = () => {
       }
     );
     const savedUser = await savedUserResponse.json();
-    console.log('saved user');
-    console.log(savedUser);
+    onSubmitProps.resetForm();
     if (savedUser) {
       setPageType('login');
-      onSubmitProps.resetForm();
     }
   };
 
@@ -201,8 +198,14 @@ const Form = () => {
                         {!values.picture ? (
                           <p>Add Picture Here</p>
                         ) : (
-                          <FlexBetween>
-                            <Typography>{values.picture.name}</Typography>
+                          <FlexBetween gap="5px">
+                            <Typography
+                              sx={{
+                                overflow: 'auto',
+                              }}
+                            >
+                              {values.picture.name}
+                            </Typography>
                             <EditOutlinedIcon />
                           </FlexBetween>
                         )}
@@ -224,55 +227,45 @@ const Form = () => {
                 gridColumn: 'span 4',
               }}
             />
-            <FormControl
+            <TextField
+              label="Password"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              value={values.password}
+              helperText={touched.password && errors.password}
+              error={Boolean(touched.password) && Boolean(errors.password)}
+              name="password"
+              type={visibility ? 'password' : 'text'}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => {
+                        setVisibility(!visibility);
+                      }}
+                    >
+                      {visibility ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
               sx={{
                 gridColumn: 'span 4',
               }}
-            >
-              <TextField
-                label="Password"
-                type={visibility ? 'password' : 'text'}
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.password}
-                helperText={touched.password && errors.password}
-                error={Boolean(touched.password) && Boolean(errors.password)}
-                name="password"
-              />
-
-              <IconButton
-                onClick={() => {
-                  setVisibility(!visibility);
-                }}
-              >
-                {visibility ? (
-                  <VisibilityOff
-                    sx={{
-                      fontSize: '1rem',
-                    }}
-                  />
-                ) : (
-                  <Visibility
-                    sx={{
-                      fontSize: '1rem',
-                    }}
-                  />
-                )}
-              </IconButton>
-            </FormControl>
+            />
           </Box>
           {/* Button */}
           <Box gridColumn="span 4">
             <Button
-              width="100%"
+              fullWidth
               type="submit"
               sx={{
-                p: '0.8rem',
                 m: '1rem 0',
+                p: '0.8rem',
                 gridColumn: 'span 4',
                 borderRadius: '5px',
-                backgroundColor: palette.background.alt,
-                color: palette.primary.main,
+                backgroundColor: palette.primary.main,
+                color: palette.background.alt,
                 '&:hover': {
                   color: palette.primary.main,
                 },
