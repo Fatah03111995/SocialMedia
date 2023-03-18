@@ -7,7 +7,6 @@ import {
   Typography,
   useTheme,
   IconButton,
-  FormControl,
   InputAdornment,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
@@ -19,7 +18,6 @@ import { useDispatch } from 'react-redux';
 import { setLogin } from 'state';
 import Dropzone from 'react-dropzone';
 import FlexBetween from 'components/FlexBetween';
-import { Password } from '@mui/icons-material';
 
 const registerSchema = yup.object().shape({
   firstName: yup.string().required('diperlukan'),
@@ -33,7 +31,7 @@ const registerSchema = yup.object().shape({
 
 const loginSchema = yup.object().shape({
   email: yup.string().email('Coba ketik dengan benar').required('diperlukan'),
-  Password: yup.string().required(),
+  password: yup.string().required('data diperlukan'),
 });
 
 const initialValuesRegister = {
@@ -43,7 +41,9 @@ const initialValuesRegister = {
   location: '',
   occupation: '',
   password: '',
+  picture: '',
 };
+
 const initialValuesLogin = {
   email: '',
   password: '',
@@ -51,22 +51,22 @@ const initialValuesLogin = {
 
 const Form = () => {
   const [visibility, setVisibility] = useState(true);
-  const [pageType, setPageType] = useState('register');
+  const [pageType, setPageType] = useState('login');
   const { palette } = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const nonMobile = useMediaQuery('(min-width: 1000px)');
+  const isNonMobile = useMediaQuery('(min-width: 600px)');
   const isLogin = pageType === 'login';
   const isRegister = pageType === 'register';
 
   const register = async (values, onSubmitProps) => {
-    // mengelola file gambar
-    console.log(values);
+    // this allows us to send form info with image
     const formData = new FormData();
     for (let value in values) {
       formData.append(value, values[value]);
     }
     formData.append('picturePath', values.picture.name);
+
     const savedUserResponse = await fetch(
       'http://localhost:5000/auth/register',
       {
@@ -76,23 +76,46 @@ const Form = () => {
     );
     const savedUser = await savedUserResponse.json();
     onSubmitProps.resetForm();
+
     if (savedUser) {
       setPageType('login');
     }
   };
 
-  const login = async (values, onSubmitProps) => {};
+  const login = async (values, onSubmitProps) => {
+    const data = JSON.stringify(values);
+    console.log(data);
+    const loggedInResponse = await fetch('http://localhost:5000/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: data,
+    });
+    const loggedIn = await loggedInResponse.json();
+    onSubmitProps.resetForm();
+    if (loggedIn) {
+      dispatch(
+        setLogin({
+          user: loggedIn.user,
+          token: loggedIn.token,
+        })
+      );
+      navigate('/home');
+    }
+  };
+
   const handleFormSubmit = async (values, onSubmitProps) => {
-    if (isLogin) await login(values, onSubmitProps);
+    if (isLogin) {
+      console.log('login di klik');
+      await login(values, onSubmitProps);
+    }
     if (isRegister) await register(values, onSubmitProps);
   };
+
   return (
     <Formik
       onSubmit={handleFormSubmit}
-      initialValues={
-        pageType === 'login' ? initialValuesLogin : initialValuesRegister
-      }
-      validationSchema={pageType === 'login' ? loginSchema : registerSchema}
+      initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
+      validationSchema={isLogin ? loginSchema : registerSchema}
     >
       {({
         values,
@@ -110,9 +133,7 @@ const Form = () => {
             gap="20px"
             gridTemplateColumns="repeat(4, minmax(0, 1fr))"
             sx={{
-              '& > div': {
-                gridColumn: nonMobile ? undefined : 'span 4',
-              },
+              '& > div': { gridColumn: isNonMobile ? undefined : 'span 4' },
             }}
           >
             {isRegister && (
@@ -127,9 +148,7 @@ const Form = () => {
                     Boolean(touched.firstName) && Boolean(errors.firstName)
                   }
                   name="firstName"
-                  sx={{
-                    gridColumn: 'span 2',
-                  }}
+                  sx={{ gridColumn: 'span 2' }}
                 />
                 <TextField
                   label="Last Name"
@@ -139,9 +158,17 @@ const Form = () => {
                   helperText={touched.lastName && errors.lastName}
                   error={Boolean(touched.lastName) && Boolean(errors.lastName)}
                   name="lastName"
-                  sx={{
-                    gridColumn: 'span 2',
-                  }}
+                  sx={{ gridColumn: 'span 2' }}
+                />
+                <TextField
+                  label="Location"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.location}
+                  helperText={touched.location && errors.location}
+                  error={Boolean(touched.location) && Boolean(errors.location)}
+                  name="location"
+                  sx={{ gridColumn: 'span 4' }}
                 />
                 <TextField
                   label="Occupation"
@@ -153,21 +180,7 @@ const Form = () => {
                     Boolean(touched.occupation) && Boolean(errors.occupation)
                   }
                   name="occupation"
-                  sx={{
-                    gridColumn: 'span 4',
-                  }}
-                />
-                <TextField
-                  label="Location"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.location}
-                  helperText={touched.location && errors.location}
-                  error={Boolean(touched.location) && Boolean(errors.location)}
-                  name="location"
-                  sx={{
-                    gridColumn: 'span 4',
-                  }}
+                  sx={{ gridColumn: 'span 4' }}
                 />
                 <Box
                   gridColumn="span 4"
@@ -188,11 +201,7 @@ const Form = () => {
                         {...getRootProps()}
                         border={`2px dashed ${palette.primary.main}`}
                         p="0.7rem"
-                        sx={{
-                          '&:hover': {
-                            cursor: 'pointer',
-                          },
-                        }}
+                        sx={{ '&:hover': { cursor: 'pointer' } }}
                       >
                         <input {...getInputProps()} />
                         {!values.picture ? (
@@ -201,7 +210,7 @@ const Form = () => {
                           <FlexBetween gap="5px">
                             <Typography
                               sx={{
-                                overflow: 'auto',
+                                overflow: 'hidden',
                               }}
                             >
                               {values.picture.name}
@@ -215,6 +224,7 @@ const Form = () => {
                 </Box>
               </>
             )}
+
             <TextField
               label="E-Mail"
               onBlur={handleBlur}
@@ -223,9 +233,7 @@ const Form = () => {
               helperText={touched.email && errors.email}
               error={Boolean(touched.email) && Boolean(errors.email)}
               name="email"
-              sx={{
-                gridColumn: 'span 4',
-              }}
+              sx={{ gridColumn: 'span 4' }}
             />
             <TextField
               label="Password"
@@ -254,8 +262,9 @@ const Form = () => {
               }}
             />
           </Box>
+
           {/* Button */}
-          <Box gridColumn="span 4">
+          <Box>
             <Button
               fullWidth
               type="submit"
@@ -266,9 +275,8 @@ const Form = () => {
                 borderRadius: '5px',
                 backgroundColor: palette.primary.main,
                 color: palette.background.alt,
-                '&:hover': {
-                  color: palette.primary.main,
-                },
+                cursor: 'pointer',
+                '&:hover': { color: palette.primary.main },
               }}
             >
               {isLogin ? 'LOGIN' : 'REGISTER'}
@@ -281,12 +289,12 @@ const Form = () => {
               resetForm();
             }}
             sx={{
-              cursor: 'pointer',
+              textDecoration: 'underline',
               color: palette.primary.main,
+              cursor: 'pointer',
               '&:hover': {
                 color: palette.primary.light,
               },
-              textDecoration: 'underlined',
             }}
           >
             {isLogin

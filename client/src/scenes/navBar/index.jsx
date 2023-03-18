@@ -27,12 +27,11 @@ import { useNavigate } from 'react-router-dom';
 
 const NavBar = () => {
   const [toggle, setToggle] = useState(false);
-  // const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const nonMobile = useMediaQuery('(min-width: 1000px)');
-  // const fullName = `${user.firstName} ${user.lastName}`;
-  const fullName = 'abdul fatah';
+  const user = useSelector((state) => state.user);
+  const fullName = `${user.firstName} ${user.lastName}`;
   const theme = useTheme();
   const primaryLight = theme.palette.primary.light;
   const neutralLight = theme.palette.neutral.light;
