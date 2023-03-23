@@ -65,6 +65,7 @@ const MyPostWidget = ({ picturePath }) => {
           placeholder="What's on your mind..."
           onChange={(e) => setPost(e.target.value)}
           value={post}
+          multiline={true}
           sx={{
             width: '100%',
             backgroundColor: palette.neutral.light,
@@ -169,7 +170,7 @@ const MyPostWidget = ({ picturePath }) => {
         )}
         <Button
           disabled={!post}
-          onCLick={handlePost}
+          onClick={handlePost}
           sx={{
             color: palette.background.alt,
             backgroundColor: palette.primary.main,

@@ -67,7 +67,12 @@ const NavBar = () => {
             gap="3rem"
             padding="0.1 rem 1.5rem"
           >
-            <InputBase placeholder="Search..." />
+            <InputBase
+              sx={{
+                p: '0.25rem 1rem',
+              }}
+              placeholder="Search..."
+            />
             <IconButton>
               <Search />
             </IconButton>
