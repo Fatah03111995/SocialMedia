@@ -45,15 +45,16 @@ const MyPostWidget = ({ picturePath }) => {
       formData.append('picture', image);
       formData.append('picturePath', image.name);
     }
-
     const response = await fetch(`http://localhost:5000/posts`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}` },
       body: formData,
     });
     const posts = await response.json();
-    dispatch(setPosts({ posts }));
+    const rev = posts.reverse();
+    dispatch(setPosts({ posts: rev }));
     setImage(null);
+    setIsImage(false);
     setPost('');
   };
 
@@ -64,6 +65,7 @@ const MyPostWidget = ({ picturePath }) => {
         <InputBase
           placeholder="What's on your mind..."
           onChange={(e) => setPost(e.target.value)}
+          multiline={true}
           value={post}
           sx={{
             width: '100%',
@@ -99,19 +101,24 @@ const MyPostWidget = ({ picturePath }) => {
                     <p>Add Image Here</p>
                   ) : (
                     <FlexBetween>
-                      <Typography>{image.name}</Typography>
-                      <EditOutlined />
+                      <FlexBetween width="100%">
+                        <Typography>{image.name}</Typography>
+                        <IconButton sx={{ fontSize: '0.6rem' }}>
+                          <EditOutlined />
+                        </IconButton>
+                      </FlexBetween>
+                      <IconButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setImage(null);
+                        }}
+                        sx={{ fontSize: '0.6rem' }}
+                      >
+                        <DeleteOutlined />
+                      </IconButton>
                     </FlexBetween>
                   )}
                 </Box>
-                {image && (
-                  <IconButton
-                    onClick={() => setImage(null)}
-                    sx={{ width: '15%' }}
-                  >
-                    <DeleteOutlined />
-                  </IconButton>
-                )}
               </FlexBetween>
             )}
           </Dropzone>

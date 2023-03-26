@@ -6,11 +6,12 @@ import Navbar from 'scenes/NavBar';
 import FriendListWidget from 'scenes/widgets/FriendListWidget';
 import MyPostWidget from 'scenes/widgets/MyPostWidgetTr';
 import PostsWidget from 'scenes/widgets/PostsWidget';
-import UserWidget from 'scenes/widgets/UserWidget';
+import UserWidget from 'scenes/widgets/UserWidgetTr';
 
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const { userId } = useParams();
+  const userOrFriends = userId === useSelector((state) => state.user._id);
   const token = useSelector((state) => state.token);
   const isNonMobileScreens = useMediaQuery('(min-width:1000px)');
 
@@ -40,7 +41,11 @@ const ProfilePage = () => {
         justifyContent="center"
       >
         <Box flexBasis={isNonMobileScreens ? '26%' : undefined}>
-          <UserWidget userId={userId} picturePath={user.picturePath} />
+          <UserWidget
+            userId={userId}
+            picturePath={user.picturePath}
+            userOrFriends={userOrFriends}
+          />
           <Box m="2rem 0" />
           <FriendListWidget userId={userId} />
         </Box>

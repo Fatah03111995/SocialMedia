@@ -13,8 +13,6 @@ function App() {
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
   const token = useSelector((state) => state.token);
   const isAuth = Boolean(token);
-  console.log(token);
-  console.log(isAuth);
 
   return (
     <BrowserRouter>

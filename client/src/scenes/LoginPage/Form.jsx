@@ -84,7 +84,6 @@ const Form = () => {
 
   const login = async (values, onSubmitProps) => {
     const data = JSON.stringify(values);
-    console.log(data);
     const loggedInResponse = await fetch('http://localhost:5000/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -105,7 +104,6 @@ const Form = () => {
 
   const handleFormSubmit = async (values, onSubmitProps) => {
     if (isLogin) {
-      console.log('login di klik');
       await login(values, onSubmitProps);
     }
     if (isRegister) await register(values, onSubmitProps);
@@ -233,7 +231,7 @@ const Form = () => {
               helperText={touched.email && errors.email}
               error={Boolean(touched.email) && Boolean(errors.email)}
               name="email"
-              autoComplete={false}
+              autoComplete="off"
               sx={{ gridColumn: 'span 4' }}
             />
             <TextField
@@ -244,7 +242,7 @@ const Form = () => {
               helperText={touched.password && errors.password}
               error={Boolean(touched.password) && Boolean(errors.password)}
               name="password"
-              autoComplete={false}
+              autoComplete="off"
               type={visibility ? 'password' : 'text'}
               InputProps={{
                 endAdornment: (

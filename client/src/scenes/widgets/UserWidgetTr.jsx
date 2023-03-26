@@ -7,12 +7,16 @@ import {
 import { Box, Typography, Divider, useTheme } from '@mui/material';
 import UserImage from 'components/UserImage';
 import FlexBetween from 'components/FlexBetween';
-import WidgetWrapper from 'components/lat';
+import WidgetWrapper from 'components/WidgetWrapper';
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const UserWidget = ({ userId, picturePath = 'default.jpeg' }) => {
+const UserWidget = ({
+  userId,
+  picturePath = 'default.jpeg',
+  userOrFriends = false,
+}) => {
   const [user, setUser] = useState(null);
   const { palette } = useTheme();
   const navigate = useNavigate();
@@ -32,7 +36,7 @@ const UserWidget = ({ userId, picturePath = 'default.jpeg' }) => {
 
   useEffect(() => {
     getUser();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!user) {
     return null;
@@ -54,7 +58,9 @@ const UserWidget = ({ userId, picturePath = 'default.jpeg' }) => {
       <FlexBetween
         gap="o.5rem"
         pb="1.1rem"
-        onClick={() => navigate(`profile/${userId}`)}
+        onClick={() => {
+          navigate(`/profile/${userId}`);
+        }}
       >
         <FlexBetween gap="1rem">
           <UserImage picturePath={picturePath} />
@@ -75,7 +81,7 @@ const UserWidget = ({ userId, picturePath = 'default.jpeg' }) => {
             <Typography color={medium}>{friends.length} friends</Typography>
           </Box>
         </FlexBetween>
-        <ManageAccountsOutlined />
+        {userOrFriends && <ManageAccountsOutlined />}
       </FlexBetween>
       <Divider />
 
@@ -123,7 +129,7 @@ const UserWidget = ({ userId, picturePath = 'default.jpeg' }) => {
               <Typography color={medium}>Social Network</Typography>
             </Box>
           </FlexBetween>
-          <EditOutlined sx={{ color: main }} />
+          {userOrFriends && <EditOutlined sx={{ color: main }} />}
         </FlexBetween>
 
         <FlexBetween gap="1rem">
@@ -136,7 +142,7 @@ const UserWidget = ({ userId, picturePath = 'default.jpeg' }) => {
               <Typography color={medium}>Network Platform</Typography>
             </Box>
           </FlexBetween>
-          <EditOutlined sx={{ color: main }} />
+          {userOrFriends && <EditOutlined sx={{ color: main }} />}
         </FlexBetween>
       </Box>
     </WidgetWrapper>

@@ -1,16 +1,11 @@
-const themeSEttings = (mode) => {
-    return {
-        pallete: {
-            ...(mode==='dark' ? {
-                primary:{
-                    dark, medium, SVGFESpotLightElement
-                },
-                neutral:
-                background:,
-            }:{
-                //light
-            })
-        }
-        typhography
-    }
-}
+const a = [
+  {
+    name: 'fatah',
+  },
+  { name: 'fatih' },
+  { name: 'fatuh' },
+  { name: 'agnes' },
+  { name: 'putri' },
+];
+const reverse = a.reverse();
+console.log(reverse);

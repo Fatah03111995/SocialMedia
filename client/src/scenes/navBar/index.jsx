@@ -12,6 +12,7 @@ import {
   FormControl,
   useTheme,
   useMediaQuery,
+  InputAdornment,
 } from '@mui/material';
 import {
   Search,
@@ -49,7 +50,7 @@ const NavBar = () => {
           fontSize="clamp(1rem, 2rem, 2.25rem)"
           color={primary}
           onClick={() => {
-            navigate('/');
+            navigate('/home');
           }}
           sx={{
             '&:hover': {
@@ -72,10 +73,14 @@ const NavBar = () => {
                 p: '0.25rem 1rem',
               }}
               placeholder="Search..."
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton>
+                    <Search />
+                  </IconButton>
+                </InputAdornment>
+              }
             />
-            <IconButton>
-              <Search />
-            </IconButton>
           </FlexBetween>
         )}
       </FlexBetween>
@@ -111,7 +116,14 @@ const NavBar = () => {
               }}
               input={<InputBase />}
             >
-              <MenuItem value={fullName}>
+              <MenuItem
+                value={fullName}
+                onClick={() => {
+                  console.log(user._id);
+                  navigate(`/profile/${user._id}`);
+                  navigate(0);
+                }}
+              >
                 <Typography>{fullName}</Typography>
               </MenuItem>
               <MenuItem onClick={() => dispatch(setLogout())}>Logout</MenuItem>
