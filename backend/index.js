@@ -1,4 +1,5 @@
 import express from 'express';
+import { existsSync, mkdirSync } from 'fs';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import cors from 'cors';
@@ -25,9 +26,9 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
-// app.use(helmet());
+app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }));
-// app.use(morgan('common'));
+app.use(morgan('common'));
 app.use(bodyParser.json({ limit: '30mb', extended: true }));
 app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }));
 app.use(cors());
@@ -36,9 +37,16 @@ app.use('/assets', express.static(path.join(__dirname, 'public/assets')));
 // file storage
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'public/assets');
+    const userName = req.body.userName;
+    const path = `public/assets/${userName}`;
+    if (existsSync(path)) cb(null, `public/assets/${userName}`);
+    else {
+      mkdirSync(path);
+      cb(null, `public/assets/${userName}`);
+    }
   },
   filename: function (req, file, cb) {
+    console.log(file);
     cb(null, file.originalname);
   },
 });
